@@ -19,21 +19,38 @@ size_t write_data(void *ptr, size_t size, size_t nmemb, FILE *stream)
     return fwrite(ptr, size, nmemb, stream);
 }
 
-int main(void) 
+int main(int argc, char **argv) 
 {
     CURL *curl;
     FILE *fp;
     CURLcode res;
+    char* url_download = URL_DOWNLOAD;
+    // get arguments
+    int opt;
+    while ((opt = getopt(argc, argv, "u:")) != -1) {
+       switch (opt) {
+       case 'u':  
+           url_download = optarg;
+           break;
+       default:
+            fprintf(stderr, "Usage: %s [-u] [url...]\n", argv[0]);
+            exit(EXIT_FAILURE);
+        }
+    }
     // get file from NETwork
     curl = curl_easy_init();
     if (curl) {
         fp = fopen(FILE_TO_SAVE,"wb");
-        curl_easy_setopt(curl, CURLOPT_URL, URL_DOWNLOAD);
+        curl_easy_setopt(curl, CURLOPT_URL, url_download);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
         res = curl_easy_perform(curl);
-	// clean
+    	// clean
         curl_easy_cleanup(curl);
+    }
+    if(res != CURLE_OK) {
+        perror("curl returned error");
+        exit(EXIT_FAILURE);
     }
     // reopen file
     if(freopen(FILE_TO_SAVE, "r+", fp) == NULL) {
@@ -41,6 +58,7 @@ int main(void)
         remove(FILE_TO_SAVE);
         exit(-1);
     }
+    // init dynamic arrays
     addr_t* addr_arr = malloc(sizeof (addr_t));
     if(addr_arr == NULL) {
         perror("malloc not work");
@@ -48,6 +66,7 @@ int main(void)
         remove(FILE_TO_SAVE);
         exit(-1);
     }
+    // read every addr from file
     int items = 0;
     while(
             fscanf(fp, "%hhu.%hhu.%hhu.%hhu:%hhu",
