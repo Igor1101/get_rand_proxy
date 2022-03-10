@@ -56,7 +56,7 @@ int main(int argc, char **argv)
     if(freopen(FILE_TO_SAVE, "r+", fp) == NULL) {
     	perror("err freopen NULL return");
         remove(FILE_TO_SAVE);
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
     // init dynamic arrays
     addr_t* addr_arr = malloc(sizeof (addr_t));
@@ -64,7 +64,7 @@ int main(int argc, char **argv)
         perror("malloc not work");
         fclose(fp);
         remove(FILE_TO_SAVE);
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
     // read every addr from file
     int items = 0;
@@ -85,7 +85,7 @@ int main(int argc, char **argv)
             perror("realloc not work");
             fclose(fp);
             remove(FILE_TO_SAVE);
-            exit(-1);
+            exit(EXIT_FAILURE);
         }
     }
     // now choose rand addr
