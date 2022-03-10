@@ -24,11 +24,10 @@ int main(void)
     CURL *curl;
     FILE *fp;
     CURLcode res;
-    char outfilename[FILENAME_MAX] = FILE_TO_SAVE;
-    // get file from NET
+    // get file from NETwork
     curl = curl_easy_init();
     if (curl) {
-        fp = fopen(outfilename,"wb");
+        fp = fopen(FILE_TO_SAVE,"wb");
         curl_easy_setopt(curl, CURLOPT_URL, URL_DOWNLOAD);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, fp);
@@ -36,7 +35,7 @@ int main(void)
 	// clean
         curl_easy_cleanup(curl);
     }
-    // get rand IP from file
+    // reopen file
     if(freopen(FILE_TO_SAVE, "r+", fp) == NULL) {
     	perror("err freopen NULL return");
         remove(FILE_TO_SAVE);
@@ -73,7 +72,7 @@ int main(void)
     // now choose rand addr
     srand(time(NULL)+getpid());
     int random_num = rand() % items + 0;
-    printf("%hhu.%hhu.%hhu.%hhu:%hhu\n", 
+    printf("%hhu.%hhu.%hhu.%hhu:%hhu", 
             addr_arr[random_num].ipv4[0],
             addr_arr[random_num].ipv4[1],
             addr_arr[random_num].ipv4[2],
