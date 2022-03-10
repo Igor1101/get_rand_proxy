@@ -6,7 +6,7 @@ CFLAGS=-I$(IDIR)
 ODIR=./
 LDIR =../lib
 
-LIBS=-lm -lcurl
+LIBS=-lcurl
 
 _DEPS = conf.h
 DEPS = $(patsubst %,$(IDIR)/%,$(_DEPS))
