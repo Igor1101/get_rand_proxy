@@ -9,7 +9,7 @@
 // local structs 
 typedef struct {
     uint8_t ipv4[4];
-    uint8_t port;
+    uint16_t port;
 } addr_t;
 /**
     callback for write func
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     // read every addr from file
     int items = 0;
     while(
-            fscanf(fp, "%hhu.%hhu.%hhu.%hhu:%hhu",
+            fscanf(fp, "%hhu.%hhu.%hhu.%hhu:%hu",
                 &addr_arr[items].ipv4[0],
                 &addr_arr[items].ipv4[1],
                 &addr_arr[items].ipv4[2],
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     // now choose rand addr
     srand(time(NULL)+getpid());
     int random_num = rand() % items + 0;
-    printf("%hhu.%hhu.%hhu.%hhu:%hhu", 
+    printf("%hhu.%hhu.%hhu.%hhu:%hu", 
             addr_arr[random_num].ipv4[0],
             addr_arr[random_num].ipv4[1],
             addr_arr[random_num].ipv4[2],
